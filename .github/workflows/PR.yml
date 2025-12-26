@@ -8,7 +8,7 @@ jobs:
       - name: Get code
         uses: actions/checkout@v6
 
-      - name: Install Node.js
+      - name: Install nodeJS
         uses: actions/setup-node@v6
 
       - name: Install dependencies
