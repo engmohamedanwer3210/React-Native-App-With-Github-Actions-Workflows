@@ -1,0 +1,12 @@
+name: Second Workflow
+on: workflow_dispatch
+
+jobs:
+  info:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print info
+        run: |
+          echo "github = ${{ toJson(github) }} triggered!"
+          echo "env = ${{ toJson(env) }} triggered!"
+          echo "vars = ${{ toJson(vars) }} triggered!"
