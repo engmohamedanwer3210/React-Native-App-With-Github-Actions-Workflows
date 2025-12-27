@@ -8,7 +8,7 @@ const Products = () => {
       <FlatList
         style={styles.productsList}
         data={productsData}
-        keyExtractor={item => item.id.toString()}
+        keyExtractor={item => item.id}
         renderItem={({ item }) => (
           <View style={styles.productContainer}>
             <Text>{item.name}</Text>
