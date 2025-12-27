@@ -77,3 +77,25 @@ jobs:
         run: |
           cd android
           ./gradlew assembleDebug
+
+  build-ios:
+    runs-on: macos-latest
+    steps:
+      - name: Get code
+        uses: actions/checkout@v6
+
+      - name: Install nodeJS
+        uses: actions/setup-node@v6
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install cocoaPods
+        run: |
+          cd ios
+          pod install --repo-update
+
+      - name: Build iOS Debug
+        run: |
+          cd ios
+          xcodebuild -workspace DemoApp.xcworkspace -scheme DemoApp -configuration Debug -sdk iphonesimulator -derivedDataPath build
