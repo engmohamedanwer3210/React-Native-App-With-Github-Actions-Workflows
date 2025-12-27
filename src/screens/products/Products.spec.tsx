@@ -4,7 +4,7 @@ import Products from './Products';
 
 describe('Products', () => {
   it('renders a list of products', () => {
-    const { getByTestId, getAllByText } = render();
+    const { getByTestId, getAllByText } = render(<Products />);
 
     const list = getByTestId('productsList');
     expect(list).toBeTruthy();
