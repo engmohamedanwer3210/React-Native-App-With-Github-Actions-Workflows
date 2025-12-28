@@ -1,5 +1,11 @@
 import React from 'react';
-import { FlatList, StyleSheet, Text, View } from 'react-native';
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import productsData from '../data/products.json';
 
 const Products = () => {
@@ -18,6 +24,9 @@ const Products = () => {
         )}
         testID="productsList"
       />
+      <TouchableOpacity testID="btn" onPress={() => {}}>
+        <Text>Press me!</Text>
+      </TouchableOpacity>
     </View>
   );
 };
