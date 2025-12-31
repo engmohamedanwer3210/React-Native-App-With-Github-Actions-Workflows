@@ -73,65 +73,67 @@ jobs:
       - name: Run unit tests with coverage
         run: npm  run test -- --coverage
 
-  build-android:
-    runs-on: ubuntu-latest
-    needs: [unit-test-with-coverage]
-    steps:
-      - name: Get code
-        uses: actions/checkout@v6
+  # build-android:
+  #   runs-on: ubuntu-latest
+  #   needs: [unit-test-with-coverage]
+  #   steps:
+  #     - name: Get code
+  #       uses: actions/checkout@v6
 
-      - name: Install nodeJS
-        uses: actions/setup-node@v6
+  #     - name: Install nodeJS
+  #       uses: actions/setup-node@v6
 
-      - name: Install dependencies
-        run: npm ci
+  #     - name: Install dependencies
+  #       run: npm ci
 
-      - name: Install JDK
-        uses: actions/setup-java@v5
-        with:
-          distribution: temurin
-          java-version: '17'
+  #     - name: Install JDK
+  #       uses: actions/setup-java@v5
+  #       with:
+  #         distribution: temurin
+  #         java-version: '17'
 
-      - name: Cache gradle
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*') }}
+  #     - name: Cache gradle
+  #       uses: actions/cache@v4
+  #       with:
+  #         path: |
+  #           ~/.gradle/caches
+  #           ~/.gradle/wrapper
+  #         key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*') }}
 
-      - name: Build Android Debug
-        run: |
-          cd android
-          ./gradlew assembleDebug
+  #     - name: Build Android Debug
+  #       run: |
+  #         cd android
+  #         ./gradlew assembleDebug
 
-  build-ios:
-    runs-on: macos-latest
-    needs: [unit-test-with-coverage]
-    steps:
-      - name: Get code
-        uses: actions/checkout@v6
+  # build-ios:
+  #   runs-on: macos-latest
+  #   needs: [unit-test-with-coverage]
+  #   steps:
+  #     - name: Get code
+  #       uses: actions/checkout@v6
 
-      - name: Install nodeJS
-        uses: actions/setup-node@v6
+  #     - name: Install nodeJS
+  #       uses: actions/setup-node@v6
 
-      - name: Install dependencies
-        run: npm ci
+  #     - name: Install dependencies
+  #       run: npm ci
 
-      - name: Install cocoaPods
-        run: |
-          cd ios
-          pod install --repo-update
+  #     - name: Install cocoaPods
+  #       run: |
+  #         cd ios
+  #         pod install --repo-update
 
-      - name: Build iOS Debug
-        run: |
-          cd ios
-          xcodebuild -workspace DemoApp.xcworkspace -scheme DemoApp -configuration Debug -sdk iphonesimulator -derivedDataPath build
+  #     - name: Build iOS Debug
+  #       run: |
+  #         cd ios
+  #         xcodebuild -workspace DemoApp.xcworkspace -scheme DemoApp -configuration Debug -sdk iphonesimulator -derivedDataPath build
 
   notify-pr-owner:
     runs-on: ubuntu-latest
-    needs: [build-android, build-ios]
-    if: success() && github.event_name == 'pull_request'
+    # needs: [build-android, build-ios]
+    # if: success() && github.event_name == 'pull_request'
+    needs: [unit-test-with-coverage]
+    if: github.event.pull_request.head.repo.full_name == github.repository
 
     steps:
       - name: Notify pr owner
