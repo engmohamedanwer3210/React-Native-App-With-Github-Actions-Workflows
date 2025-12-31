@@ -11,8 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: validate pr title
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
         run: |
-          PR_TITLE="$(echo "$PR_TITLE" | xargs)"
           PATTERN='^(feat|fix|chore|docs|refactor|test|perf|ci|build|revert): .+'
 
           echo "Checking PR title: $PR_TITLE"
