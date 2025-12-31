@@ -5,7 +5,6 @@ on:
     paths-ignore: #the workflow will not run if only these files are changed
       - README.md
       - docs/**
-      - .github/workflows/**
 
 jobs:
   validate-pr-title:
