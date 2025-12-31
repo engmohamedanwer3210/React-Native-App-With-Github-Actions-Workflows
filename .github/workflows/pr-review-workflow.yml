@@ -12,14 +12,17 @@ jobs:
     steps:
       - name: validate pr title
         run: |
-          echo "PR title: $PR_TITLE"
+          PR_TITLE="$(echo "$PR_TITLE" | xargs)"
+          PATTERN='^(feat|fix|chore|docs|refactor|test|perf|ci|build|revert): .+'
 
-          PATTERN="^(feat|fix|chore|docs|refactor|test|perf|ci|build|revert): .+"
+          echo "Checking PR title: $PR_TITLE"
 
           if [[ ! "$PR_TITLE" =~ $PATTERN ]]; then
-            echo "::error::PR title is not semantic. It should follow the pattern: '<type>: <description>' where type is one of feat, fix, chore, docs, refactor, test, perf, ci, build, revert."
+            echo "::error::PR title must follow semantic format"
             exit 1
           fi
+
+          echo "✅ PR title is valid"
 
   lint:
     runs-on: ubuntu-latest
