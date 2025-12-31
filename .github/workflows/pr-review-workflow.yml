@@ -8,6 +8,25 @@ on:
       - .github/workflows/**
 
 jobs:
+  validate-pr-title:
+    runs-on: ubuntu-latest
+    steps:
+      - name: validate pr title
+        run: |
+          echo "PR title: $PR_TITLE"
+
+          PATTERN="^(feat|fix|chore|docs|refactor|test|perf|ci|build|revert): .+"
+
+          if [[ ! "$PR_TITLE" =~ $PATTERN ]]; then
+            echo "::error::PR title is not semantic."
+            echo "Expected format:"
+            echo "  feat: description"
+            echo "  fix(scope): description"
+            exit 1
+          fi
+
+          echo "✅ PR title is semantic"
+
   lint:
     runs-on: ubuntu-latest
     steps:
