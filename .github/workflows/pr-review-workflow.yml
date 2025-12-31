@@ -39,6 +39,7 @@ jobs:
 
   type-check:
     runs-on: ubuntu-latest
+    needs: [validate-pr-title]
     steps:
       - name: Get code
         uses: actions/checkout@v6
