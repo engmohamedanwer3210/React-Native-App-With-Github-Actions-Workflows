@@ -1,4 +1,4 @@
-name: manual publish workflow
+name: manual-publish-workflow
 on:
   workflow_dispatch:
 
