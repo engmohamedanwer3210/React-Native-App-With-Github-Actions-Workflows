@@ -1,7 +1,7 @@
 name: pr-review-workflow
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
+    types: [opened, synchronize, reopened, edited]
     paths-ignore: #the workflow will not run if only these files are changed
       - README.md
       - docs/**
