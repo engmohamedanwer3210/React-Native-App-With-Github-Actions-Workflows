@@ -1,0 +1,119 @@
+name: manual publish workflow
+on:
+  workflow_dispatch:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get code
+        uses: actions/checkout@v6
+
+      - name: Install nodeJS
+        uses: actions/setup-node@v6
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run linting
+        run: npm run lint
+
+  type-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get code
+        uses: actions/checkout@v6
+
+      - name: Install nodeJS
+        uses: actions/setup-node@v6
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run type checking
+        run: npm run type-check
+
+  unit-test-with-coverage:
+    runs-on: ubuntu-latest
+    needs: [lint, type-check]
+    steps:
+      - name: Get code
+        uses: actions/checkout@v6
+
+      - name: Install nodeJS
+        uses: actions/setup-node@v6
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run unit tests with coverage
+        run: npm  run test -- --coverage
+
+  build-android:
+    runs-on: ubuntu-latest
+    needs: [unit-test-with-coverage]
+    steps:
+      - name: Get code
+        uses: actions/checkout@v6
+
+      - name: Install nodeJS
+        uses: actions/setup-node@v6
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install JDK
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Cache gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*') }}
+
+      - name: Build Android Debug
+        run: |
+          cd android
+          ./gradlew assembleDebug
+
+  build-ios:
+    runs-on: macos-latest
+    needs: [unit-test-with-coverage]
+    steps:
+      - name: Get code
+        uses: actions/checkout@v6
+
+      - name: Install nodeJS
+        uses: actions/setup-node@v6
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install cocoaPods
+        run: |
+          cd ios
+          pod install --repo-update
+
+      - name: Build iOS Debug
+        run: |
+          cd ios
+          xcodebuild -workspace DemoApp.xcworkspace -scheme DemoApp -configuration Debug -sdk iphonesimulator -derivedDataPath build
+
+  publish-to-google-store:
+    runs-on: ubuntu-latest
+    needs: [build-android]
+    steps:
+      - name: publish android app
+        run: echo "publishing to google store..."
+
+  publish-to-ios-store:
+    runs-on: ubuntu-latest
+    needs: [build-ios]
+    steps:
+      - name: publish ios app
+        run: echo "publishing to ios store..."
