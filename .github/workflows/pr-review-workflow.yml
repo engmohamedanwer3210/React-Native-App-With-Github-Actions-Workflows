@@ -1,4 +1,4 @@
-name: pr-workflow
+name: pr-review-workflow
 on:
   pull_request:
     types: [opened, synchronize, reopened]
