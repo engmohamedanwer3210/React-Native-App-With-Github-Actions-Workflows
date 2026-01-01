@@ -138,13 +138,30 @@ jobs:
     steps:
       - name: Notify pr owner
         uses: actions/github-script@v8
+        env:
+          GITHUB_TOKEN: ${{ secrets.FINE_GRAINTED_TOKEN }}
         with:
           script: |
             const pr = context.payload.pull_request;
+
+            // Build a Markdown table of all job results
+            const jobs = [
+              { name: 'Lint', status: '✅ Passed' },
+              { name: 'Type Check', status: '✅ Passed' },
+              { name: 'Unit Tests', status: '✅ Passed' }
+            ];
+
+            let summary = `## ✅ CI Passed for PR #${pr.number}\n`;
+            summary += `Hello @${pr.user.login}, all checks have passed!\n\n`;
+            summary += `| Job | Status |\n| --- | --- |\n`;
+            for (const job of jobs) {
+              summary += `| ${job.name} | ${job.status} |\n`;
+            }
+            summary += `\nReady to merge 🚀`;
 
             await github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: pr.number,
-              body: `✅ All checks have passed!\n\nGreat job @${pr.user.login} 🚀`
+              body: summary
             });
