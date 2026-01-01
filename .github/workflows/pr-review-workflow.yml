@@ -131,9 +131,9 @@ jobs:
   notify-pr-owner:
     runs-on: ubuntu-latest
     # needs: [build-android, build-ios]
-    # if: success() && github.event_name == 'pull_request'
     needs: [unit-test-with-coverage]
-    if: github.event.pull_request.head.repo.full_name == github.repository
+    # if: github.event.pull_request.head.repo.full_name == github.repository
+    if: success() && github.event_name == 'pull_request'
 
     steps:
       - name: Notify pr owner
