@@ -138,8 +138,8 @@ jobs:
     steps:
       - name: Notify pr owner
         uses: actions/github-script@v8
-        env:
-          GITHUB_TOKEN: ${{ secrets.FINE_GRAINTED_TOKEN }}
+        # env:
+        #   GITHUB_TOKEN: ${{ secrets.FINE_GRAINTED_TOKEN }}
         with:
           script: |
             const pr = context.payload.pull_request;
