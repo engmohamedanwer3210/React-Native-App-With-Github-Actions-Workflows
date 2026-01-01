@@ -138,30 +138,62 @@ jobs:
     steps:
       - name: Notify pr owner
         uses: actions/github-script@v8
-        # env:
-        #   GITHUB_TOKEN: ${{ secrets.FINE_GRAINTED_TOKEN }}
         with:
           script: |
             const pr = context.payload.pull_request;
 
-            // Build a Markdown table of all job results
+            const MARKER = '<!-- CI-QUALITY-GATE -->';
+
             const jobs = [
-              { name: 'Lint', status: '✅ Passed' },
-              { name: 'Type Check', status: '✅ Passed' },
-              { name: 'Unit Tests', status: '✅ Passed' }
+              { name: 'validate-pr-title', status: '✅ Passed' },
+              { name: 'lint', status: '✅ Passed' },
+              { name: 'type-check', status: '✅ Passed' },
+              { name: 'unit-test-with-coverage', status: '✅ Passed' },
+              { name: 'build-android', status: '✅ Passed' },
+              { name: 'build-ios', status: '✅ Passed' },
             ];
 
-            let summary = `## ✅ CI Passed for PR #${pr.number}\n`;
-            summary += `Hello @${pr.user.login}, all checks have passed!\n\n`;
-            summary += `| Job | Status |\n| --- | --- |\n`;
+            let summary = `${MARKER}
+            ## ✅ Quality Gate passed
+
+            Hello @${pr.user.login}, all checks have passed!
+
+            | Job | Status |
+            | --- | --- |
+            `;
+
             for (const job of jobs) {
               summary += `| ${job.name} | ${job.status} |\n`;
             }
+
             summary += `\nReady to merge 🚀`;
 
-            await github.rest.issues.createComment({
+             // 1️⃣ Get existing comments
+            const { data: comments } = await github.rest.issues.listComments({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: pr.number,
-              body: summary
             });
+
+            // 2️⃣ Find existing CI comment
+            const existingComment = comments.find(comment =>
+              comment.body.includes(MARKER)
+            );
+
+            if (existingComment) {
+              // 3️⃣ Update existing comment
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existingComment.id,
+                body: summary,
+              });
+            } else {
+              // 4️⃣ Create new comment
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: pr.number,
+                body: summary,
+              });
+            }
