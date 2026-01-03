@@ -135,10 +135,10 @@ jobs:
       #     restore-keys: |
       #       ${{ runner.os }}-pods-
 
-      # - name: Install cocoaPods
-      #   run: |
-      #     cd ios
-      #     pod install --deployment
+      - name: Install cocoaPods
+        run: |
+          cd ios
+          pod install --deployment
 
       - name: Build iOS Debug
         run: |
