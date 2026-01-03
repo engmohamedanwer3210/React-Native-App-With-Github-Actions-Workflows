@@ -138,7 +138,7 @@ jobs:
       - name: Install cocoaPods
         run: |
           cd ios
-          pod install --deployment
+          pod install
 
       - name: Build iOS Debug
         run: |
