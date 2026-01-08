@@ -124,17 +124,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # - name: Cache CocoaPods
-      #   uses: actions/cache@v4
-      #   with:
-      #     path: |
-      #       ios/Pods
-      #       ~/.cocoapods
-      #       ~/Library/Caches/CocoaPods
-      #     key: ${{ runner.os }}-pods-${{ hashFiles('ios/Podfile.lock') }}
-      #     restore-keys: |
-      #       ${{ runner.os }}-pods-
-
       - name: Install cocoaPods
         run: |
           cd ios
