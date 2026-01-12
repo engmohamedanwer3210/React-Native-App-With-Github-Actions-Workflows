@@ -7,7 +7,7 @@ on:
       - docs/**
 env:
   USER_NAME: ANWER-ELBASYOUNI
-  PASSWORD: 12345678A
+  USER-PASSWORD: 12345678A
 
 jobs:
   env-variables:
@@ -16,7 +16,7 @@ jobs:
       - name: Set environment variables
         run: |
           echo "USER_NAME=${{ env.USER_NAME }}"
-          echo "PASSWORD=${{ env.PASSWORD }}"
+          echo "USER-PASSWORD=${{ env.USER-PASSWORD }}"
 
   validate-pr-title:
     runs-on: ubuntu-latest
