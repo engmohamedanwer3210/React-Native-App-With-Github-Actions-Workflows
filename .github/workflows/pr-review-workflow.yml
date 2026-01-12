@@ -5,8 +5,19 @@ on:
     paths-ignore: #the workflow will not run if only these files are changed
       - README.md
       - docs/**
+env:
+  USER_NAME: ANWER-ELBASYOUNI
+  PASSWORD: 12345678A
 
 jobs:
+  env-variables:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set environment variables
+        run: |
+          echo "USER_NAME=${{ env.USER_NAME }}"
+          echo "PASSWORD=${{ env.PASSWORD }}"
+
   validate-pr-title:
     runs-on: ubuntu-latest
     steps:
