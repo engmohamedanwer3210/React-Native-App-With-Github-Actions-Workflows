@@ -8,6 +8,8 @@ import {
 } from 'react-native';
 import productsData from '../data/products.json';
 
+// products component
+
 const Products = () => {
   return (
     <View style={styles.container}>
